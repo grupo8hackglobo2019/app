@@ -13,6 +13,12 @@ import List from "./src/List";
 import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation';
 
 const DashboardIcon = () => <Image source={require("./assets/dashboard.png")} />
+const LigaIcon = () => <Image source={require("./assets/liga.png")} />
+const EscalacaoIcon = () => <Image source={require("./assets/escalacao.png")} />
+const AmigosIcon = () => <Image source={require("./assets/amigos.png")} />
+const ChatIcon = () => <Image source={require("./assets/chat.png")} />
+
+
 const SearchIcon = () => <Image source={require("./assets/search.png")} />
 const MenuIcon = () => <Image source={require("./assets/menu.png")} />
 
@@ -38,8 +44,8 @@ const ChatStack = createStackNavigator({
 
 export default createAppContainer(createBottomTabNavigator({
   Dashboard: {screen: contentHOC(() => <Image source={require("./assets/image_.png")} style={{width:"100%", height: "100%"}} />), navigationOptions: {tabBarIcon: DashboardIcon}},
-  Menu2: contentHOC(View),
-  Menu3: contentHOC(View),
-  Menu4: contentHOC(View),
-  Resenha: ChatStack
-}, {tabBarOptions: {showIcon: true}}));
+  "Escalação": { screen: contentHOC(View), navigationOptions: { tabBarIcon: EscalacaoIcon } },
+  "Liga": { screen: contentHOC(View), navigationOptions: { tabBarIcon: LigaIcon } },
+  "Amigos": { screen: contentHOC(View), navigationOptions: { tabBarIcon: AmigosIcon } },
+  Resenha: { screen: ChatStack, navigationOptions: { tabBarIcon: ChatIcon }}
+}, { tabBarOptions: { showIcon: true, activeTintColor: "#FF7B0D"}}));
