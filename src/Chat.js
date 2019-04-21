@@ -9,6 +9,14 @@ export default class Example extends React.Component {
 		messages: []
 	};
 
+	constructor(props){
+		super(props);
+		this.socket = new WebSocket('ws://grupo-oito.herokuapp.com/ws');
+		this.socket.onmessage = ({ data }) => this.setState(previousState => ({
+			messages: GiftedChat.append(previousState.messages, [JSON.parse(data)])
+		}));
+	}
+
 	componentWillMount() {
 		this.setState({
 			messages: [
@@ -27,9 +35,9 @@ export default class Example extends React.Component {
 	}
 
 	onSend(messages = []) {
-		this.setState(previousState => ({
-			messages: GiftedChat.append(previousState.messages, messages)
-		}));
+		messages.forEach((message) => {
+			this.socket.send(JSON.stringify(message))
+		})
 	}
 
 	render() {
@@ -44,6 +52,7 @@ export default class Example extends React.Component {
 				renderInputToolbar={(props) => <InputToolbar {...props} containerStyle={{ ...props.containerStyle, backgroundColor: "#DBDBDB"}} />}
 				renderComposer={(props) => <Composer {...props} textInputStyle={{...props.textInputStyle, fontSize: 12, paddingRight: 5}} />}
 				renderSend={(props) => <Send {...props} containerStyle={{ width: 30, height: 30, backgroundColor: "#FF7706", justifyContent: "center", alignItems:"center", borderRadius: 50, margin: 5}}><Image source={require("../assets/Vector.png")} style={{width:16, height: 16}} /></Send>}
+				alwaysShowSend={true}
 			/>
 		);
 	}

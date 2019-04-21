@@ -44,11 +44,12 @@ export default class Bubble extends React.Component {
 			if (this.props.renderMessageText) {
 				return this.props.renderMessageText(messageTextProps);
 			}
+			const isUserMessage = this.props.user._id === this.props.currentMessage.user._id;
 			return (
 				<MessageText
 					{...messageTextProps}
 					textStyle={{
-						left: [styles.standardFont, styles.slackMessageText, messageTextProps.textStyle, messageTextStyle],
+						left: [isUserMessage ? styles.standardFont_self : styles.standardFont, styles.messageText, messageTextProps.textStyle, messageTextStyle],
 					}}
 				/>
 			);
@@ -129,17 +130,19 @@ export default class Bubble extends React.Component {
 	render() {
 		const isSameThread = isSameUser(this.props.currentMessage, this.props.previousMessage)
 			&& isSameDay(this.props.currentMessage, this.props.previousMessage);
+		
+		const isUserMessage = this.props.user._id === this.props.currentMessage.user._id;
 
 		const messageHeader = isSameThread ? null : (
 			<View style={styles.headerView}>
 				{this.renderUsername()}
-				{this.renderTime()}
-				{this.renderTicks()}
+				{/* {this.renderTime()} */}
+				{/* {this.renderTicks()} */}
 			</View>
 		);
 
 		return (
-			<View style={[styles.container, this.props.containerStyle]}>
+			<View style={[isUserMessage ? styles.container_self : styles.container, this.props.containerStyle]}>
 				<TouchableOpacity
 					onLongPress={this.onLongPress}
 					accessibilityTraits="text"
@@ -169,15 +172,34 @@ export default class Bubble extends React.Component {
 // The "right" position is only used in the default Bubble.
 const styles = StyleSheet.create({
 	standardFont: {
-		fontSize: 15,
+		fontSize: 12,
+		color: "#A2A2A2"
 	},
-	slackMessageText: {
+	standardFont_self: {
+		fontSize: 12,
+		color: "#fff"
+	},
+	messageText: {
 		marginLeft: 0,
 		marginRight: 0,
 	},
 	container: {
 		flex: 1,
 		alignItems: 'flex-start',
+		backgroundColor: "#fff",
+		marginRight: 10,
+		padding: 10,
+		borderRadius: 10,
+		borderBottomLeftRadius: 0
+	},
+	container_self: {
+		flex: 1,
+		alignItems: 'flex-start',
+		backgroundColor: "#FF7B0D",
+		marginRight: 10,
+		padding: 10,
+		borderRadius: 10,
+		borderBottomRightRadius: 0
 	},
 	wrapper: {
 		marginRight: 60,
@@ -186,10 +208,12 @@ const styles = StyleSheet.create({
 	},
 	username: {
 		fontWeight: 'bold',
+		fontSize: 10,
+		color: "#FF7501"
 	},
 	time: {
-		textAlign: 'left',
-		fontSize: 12,
+		textAlign: 'right',
+		fontSize: 10,
 	},
 	timeContainer: {
 		marginLeft: 0,
@@ -204,6 +228,7 @@ const styles = StyleSheet.create({
 		marginTop: Platform.OS === 'android' ? -2 : 0,
 		flexDirection: 'row',
 		alignItems: 'baseline',
+		justifyContent: "space-between"
 	},
 	/* eslint-disable react-native/no-color-literals */
 	tick: {
